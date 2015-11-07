@@ -207,7 +207,7 @@ TrackBack list template sample
 				$query .= ' and t.block = 0';
 			}
 			if ($filter) {
-				$tfilter = str_replace('cblog', 'i.iblog', $filter);
+				$tfilter = str_replace('c.cblog', 'i.iblog', $filter);
 				$query .= ' and ' . $tfilter;
 			}
 			$query .= ' ORDER by t.timestamp DESC LIMIT 0, ' . $numberOfWritebacks;
