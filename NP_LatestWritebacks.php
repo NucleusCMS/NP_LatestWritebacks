@@ -148,8 +148,8 @@ TrackBack list template sample
 
 			$comments = sql_query($query);
 
-			if (mysql_num_rows($comments)) {
-				while ($row = mysql_fetch_object($comments)) {
+			if (sql_num_rows($comments)) {
+				while ($row = sql_fetch_object($comments)) {
 					$content                = (array)$row;
 					$tempBody               = strip_tags($content['commentbody']);
 					$tempBody               = htmlspecialchars($tempBody, ENT_QUOTES);
@@ -215,10 +215,10 @@ TrackBack list template sample
 			}
 			$query .= ' ORDER by t.timestamp DESC LIMIT 0, ' . $numberOfWritebacks;
 
-			$comments = mysql_query($query);
+			$comments = sql_query($query);
 
-			if (mysql_num_rows($comments)) {
-				while ($row = mysql_fetch_object($comments)) {
+			if (sql_num_rows($comments)) {
+				while ($row = sql_fetch_object($comments)) {
 					$content               = (array)$row;
 					$entrytitle            = strip_tags($content['entrytitle']);
 					$entrytitle            = htmlspecialchars($entrytitle, ENT_QUOTES);
@@ -277,7 +277,7 @@ TrackBack list template sample
 	{
 		$res = sql_query('SHOW FIELDS FROM ' . sql_table('plugin_tb') );
 		$fieldnames = array();
-		while ($co = mysql_fetch_assoc($res)) {
+		while ($co = sql_fetch_assoc($res)) {
 			$fieldnames[] = $co['Field'];
 		}
 		if (in_array('block', $fieldnames)) {
