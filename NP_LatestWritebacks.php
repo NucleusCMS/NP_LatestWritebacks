@@ -152,9 +152,9 @@ TrackBack list template sample
 				while ($row = sql_fetch_object($comments)) {
 					$content                = (array)$row;
 					$tempBody               = strip_tags($content['commentbody']);
-					$tempBody               = htmlspecialchars($tempBody, ENT_QUOTES);
+					$tempBody               = htmlspecialchars($tempBody, ENT_QUOTES,_CHARSET);
 					$tempBody               = shorten($tempBody, $numberOfCharacters, $toadd);
-					$tempBody               = htmlspecialchars($tempBody, ENT_QUOTES);
+					$tempBody               = htmlspecialchars($tempBody, ENT_QUOTES,_CHARSET);
 					$tempBody               = str_replace("\r\n", ' ', $tempBody);
 					$tempBody               = str_replace("&amp;", '&', $tempBody);
 					$tempBody               = str_replace("&gt;", '>', $tempBody);
@@ -171,7 +171,7 @@ TrackBack list template sample
 					$ct  = $row->ctimest;
 					$ctst  = date("y-m-d H:i",$ct);
 					$text = strip_tags($row->cbody);
-					$text = htmlspecialchars($text, ENT_QUOTES);
+					$text = htmlspecialchars($text, ENT_QUOTES,_CHARSET);
 					$ctext = shorten($text,$numberOfCharacters,$toadd);
  
 					if (!$row->cmember) $myname = $row->cuser;
@@ -221,19 +221,19 @@ TrackBack list template sample
 				while ($row = sql_fetch_object($comments)) {
 					$content               = (array)$row;
 					$entrytitle            = strip_tags($content['entrytitle']);
-					$entrytitle            = htmlspecialchars($entrytitle, ENT_QUOTES);
+					$entrytitle            = htmlspecialchars($entrytitle, ENT_QUOTES,_CHARSET);
 					$entrytitle            = shorten($entrytitle, $numberOfCharacters, $toadd);
-					$entrytitle            = htmlspecialchars($entrytitle, ENT_QUOTES);
+					$entrytitle            = htmlspecialchars($entrytitle, ENT_QUOTES,_CHARSET);
 					$content['entrytitle'] = $entrytitle;
 					$content['expect']     = str_replace("\r\n", ' ', $content['expect']);
-					$blogname              = htmlspecialchars($content['blogname'], ENT_QUOTES);
+					$blogname              = htmlspecialchars($content['blogname'], ENT_QUOTES,_CHARSET);
 					$content['blogname']   = $blogname;
 					$content['tbdate']     = strftime($this->getOption('tbdateformat'), $content['ttimest']);
 
 /*					$title = strip_tags($row->title);
-					$title = htmlspecialchars($title, ENT_QUOTES);
+					$title = htmlspecialchars($title, ENT_QUOTES,_CHARSET);
 					$ctitle = shorten($title,$numberOfCharacters,$toadd);
-					$blogname = htmlspecialchars($row->blog_name, ENT_QUOTES);
+					$blogname = htmlspecialchars($row->blog_name, ENT_QUOTES,_CHARSET);
 					$tbtime = $row->ttimest;
 					$ttst  = date("y-m-d H:i",$tbtime);*/
 
