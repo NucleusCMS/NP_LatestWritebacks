@@ -156,6 +156,9 @@ TrackBack list template sample
 					$tempBody               = shorten($tempBody, $numberOfCharacters, $toadd);
 					$tempBody               = htmlspecialchars($tempBody, ENT_QUOTES);
 					$tempBody               = str_replace("\r\n", ' ', $tempBody);
+					$tempBody               = str_replace("&amp;", '&', $tempBody);
+					$tempBody               = str_replace("&gt;", '>', $tempBody);
+					$tempBody               = str_replace("&lt;", '<', $tempBody);
 					$content['commentdate'] = strftime($this->getOption('cmdateformat'), $content['ctimest']);
 					$content['commentbody'] = $tempBody;
 					if (!empty($row->memberid)) {
