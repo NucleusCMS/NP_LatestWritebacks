@@ -34,7 +34,7 @@ class NP_LatestWritebacks extends NucleusPlugin
 
 	function getVersion()
 	{
-		return '1.5a';
+		return '1.6';
 	}
 
 	function getDescription()
@@ -92,6 +92,16 @@ TrackBack list template sample
 */
 	}
 
+	function pluginCheck($pluginName)
+	{
+		global $manager;
+		if (!$manager->pluginInstalled('NP_' . $pluginName)) {
+			return false;
+		}
+		$plugin =& $manager->getPlugin('NP_' . $pluginName);
+		return $plugin;
+	}
+
 	function doSkinVar($skinType,
 					   $numberOfWritebacks      = 5,
 					   $filter                  = '',
@@ -130,21 +140,32 @@ TrackBack list template sample
 		$arr_res = array();
 
 		if ($TBorCm != 't') {
-			// select
+			$join  = '';
 			$query = 'SELECT'
-				   . ' cnumber as commentid,'
-				   . ' cuser   as commentator,'
-				   . ' cbody   as commentbody,'
-				   . ' citem   as itemid,'
-				   . ' cmember as memberid,'
-//				   . ' ctime   as commentdate,'
-				   . ' SUBSTRING(ctime, 6, 5) as commentday,'
-				   . ' UNIX_TIMESTAMP(ctime)  as ctimest'
-				   . ' FROM ' . sql_table('comment');
+				   . ' c.cnumber as commentid,'
+				   . ' c.cuser   as commentator,'
+				   . ' c.cbody   as commentbody,'
+				   . ' c.citem   as itemid,'
+				   . ' c.cmember as memberid,'
+//				   . ' c.ctime   as commentdate,'
+				   . ' SUBSTRING(c.ctime, 6, 5) as commentday,'
+				   . ' UNIX_TIMESTAMP(c.ctime)  as ctimest';
+			if ($EzComment2 = $this->pluginCheck('EzComment2')) {
+				if (method_exists($EzComment2, 'getTemplateParts')) {
+					$query .= ', s.comid   as cid, '
+							. 's.secflg  as secret, '
+							. 's.module  as modname, '
+							. 's.userID  as identity ';
+					$join   = ' LEFT OUTER JOIN ' . sql_table('plug_ezcomment2') . ' as s '
+							. ' ON c.cnumber = s.comid ';
+				}
+			}
+			// select
+			$query .= ' FROM ' . sql_table('comment') .' as c ' . $join;
 			if ($filter) {
 				$query .= ' WHERE ' . $filter;
 			}
-			$query .= ' ORDER by ctime DESC LIMIT 0, ' . $numberOfWritebacks;
+			$query .= ' ORDER by c.ctime DESC LIMIT 0, ' . $numberOfWritebacks;
 
 			$comments = sql_query($query);
 
@@ -160,11 +181,22 @@ TrackBack list template sample
 					$tempBody               = str_replace("&gt;", '>', $tempBody);
 					$tempBody               = str_replace("&lt;", '<', $tempBody);
 					$content['commentdate'] = strftime($this->getOption('cmdateformat'), $content['ctimest']);
-					$content['commentbody'] = $tempBody;
+					$content['commentbody'] = str_replace("&amp;amp;", '&amp;', $tempBody);
 					if (!empty($row->memberid)) {
 						$mem                    = new MEMBER;
 						$mem->readFromID(intval($row->memberid));
 						$content['commentator'] = $mem->getRealName();
+					}
+					if ($EzComment2) {
+						$bid = intval(getBlogIDFromItemID(intval($comment['itemid'])));
+						if ($EzComment2->getBlogOption($bid, 'secret') == 'yes') {
+							$b     = $manager->getBlog($bid);
+							global $member;
+							$judge = $EzComment2->setSecretJudge($bid, $member, $b);
+						}
+					}
+					if ($judge && $content['secret']) {
+						$content = $EzComment2->JudgementCommentSecrets($content, $judge);
 					}
 
 /*					$cid  = $row->cnumber;
