@@ -40,7 +40,7 @@ class NP_LatestWritebacks extends NucleusPlugin
 	function getDescription()
 	{
 		// include language file for this plugin 
-		$language = ereg_replace( '[\\|/]', '', getLanguageName()); 
+		$language = str_replace( array('\\','/'), '', getLanguageName()); 
 		if (file_exists($this->getDirectory() . $language . '.php')) {
 			include_once($this->getDirectory() . $language . '.php'); 
 		} else {
@@ -56,7 +56,7 @@ class NP_LatestWritebacks extends NucleusPlugin
 	function install()
 	{
 		// include language file for this plugin 
-		$language = ereg_replace( '[\\|/]', '', getLanguageName()); 
+		$language = str_replace( array('\\','/'), '', getLanguageName()); 
 		if (file_exists($this->getDirectory() . $language . '.php')) {
 			include_once($this->getDirectory() . $language . '.php'); 
 		} else {
