@@ -34,7 +34,7 @@ class NP_LatestWritebacks extends NucleusPlugin
 
 	function getVersion()
 	{
-		return '1.6';
+		return '1.7';
 	}
 
 	function getDescription()
